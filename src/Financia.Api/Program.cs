@@ -1,8 +1,8 @@
-
 using Financia.Api.Filters;
 using Financia.Api.Middleware;
 using Financia.Application;
 using Financia.Infrastructure;
+using Financia.Infrastructure.Migrations;
 
 namespace Financia.Api
 {
@@ -20,7 +20,7 @@ namespace Financia.Api
 
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
-            
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -37,7 +37,20 @@ namespace Financia.Api
 
             app.MapControllers();
 
+            // Chamada para MigrateDatabase
+            MigrateDatabase(app).GetAwaiter().GetResult();
+
             app.Run();
+        }
+
+        // Método para aplicar a migração de banco de dados
+        static async Task MigrateDatabase(WebApplication app)
+        {
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                // Garantir que o DatabaseMigration tem um método assíncrono
+                await DatabaseMigration.MigrateDatabase(scope.ServiceProvider);
+            }
         }
     }
 }

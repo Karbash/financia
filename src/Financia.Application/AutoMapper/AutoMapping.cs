@@ -16,6 +16,7 @@ namespace Financia.Application.AutoMapper
         private void RequestToEntity() 
         {
             CreateMap<RequestExpenseJson, Expense>();
+            CreateMap<ResponseRegisterUserJson, User>();
         }
 
         private void EntityToResponse() 
@@ -23,6 +24,7 @@ namespace Financia.Application.AutoMapper
             CreateMap<Expense, ResponseRegisterExpenseJson>();
             CreateMap<Expense, ResponseShortExpenseJson>();
             CreateMap<Expense, ResponseExpenseJson>();
+            CreateMap<User, ResponseRegisterUserJson>();
         }
     }
 }

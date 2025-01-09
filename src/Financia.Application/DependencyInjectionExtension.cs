@@ -6,6 +6,7 @@ using Financia.Application.UseCases.Expenses.Register;
 using Financia.Application.UseCases.Expenses.Reports.Excel;
 using Financia.Application.UseCases.Expenses.Reports.Pdf;
 using Financia.Application.UseCases.Expenses.Update;
+using Financia.Application.UseCases.Users.Register;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Financia.Application
@@ -32,6 +33,7 @@ namespace Financia.Application
             services.AddScoped<IUpdateExpenseUseCase, UpdateExpenseUseCase>();
             services.AddScoped<IGenerateExpensesReportExcelUseCase, GenerateExpensesReportExcelUseCase>();
             services.AddScoped<IGenerateExpensesReportPdfUseCase, GenerateExpensesReportPdfUseCase>();
+            services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
         }
     }
 }

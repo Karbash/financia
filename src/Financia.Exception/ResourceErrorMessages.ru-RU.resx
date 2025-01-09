@@ -135,4 +135,13 @@
   <data name="EXPENSE_NOT_FOUND" xml:space="preserve">
     <value>Расход не найден.</value>
   </data>
+  <data name="NAME_EMPTY" xml:space="preserve">
+    <value>Поле имени пользователя не может быть пустым.</value>
+  </data>
+  <data name="EMAIL_INVALID" xml:space="preserve">
+    <value>Предоставленный email недействителен.</value>
+  </data>
+  <data name="EMAIL_EMPTY" xml:space="preserve">
+    <value>Поле email не может быть пустым.</value>
+  </data>
 </root>
