@@ -115,6 +115,15 @@ namespace Financia.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character (such as !, @, #, $)..
+        /// </summary>
+        public static string PASSWORD_INVALID {
+            get {
+                return ResourceManager.GetString("PASSWORD_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Payment Type is not valid.
         /// </summary>
         public static string PAYMENT_TYPE_INVALID {

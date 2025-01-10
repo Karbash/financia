@@ -144,4 +144,7 @@
   <data name="EMAIL_EMPTY" xml:space="preserve">
     <value>O campo de email não pode ser vazio.</value>
   </data>
+  <data name="PASSWORD_INVALID" xml:space="preserve">
+    <value>A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial (como !, @, #, $).</value>
+  </data>
 </root>
