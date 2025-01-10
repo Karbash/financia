@@ -1,6 +1,7 @@
 ﻿
 using Financia.Domain.Repositories;
 using Financia.Domain.Repositories.Expenses;
+using Financia.Domain.Security.Cryptography;
 using Financia.Infrastructure.DataAccess;
 using Financia.Infrastructure.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ namespace Financia.Infrastructure
         { 
             AddDbContext(services, configuration);
             AddRepositories(services);
+
+            services.AddScoped<IPasswordEncrypter, Security.BCrypt>();
         }
 
         private static void AddRepositories(IServiceCollection services)

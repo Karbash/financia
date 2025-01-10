@@ -1,5 +1,4 @@
-﻿using Financia.Communication.Requests;
-using Financia.Exception;
+﻿using Financia.Exception;
 using FluentValidation;
 using FluentValidation.Validators;
 using System.Text.RegularExpressions;

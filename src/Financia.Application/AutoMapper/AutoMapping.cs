@@ -16,7 +16,8 @@ namespace Financia.Application.AutoMapper
         private void RequestToEntity() 
         {
             CreateMap<RequestExpenseJson, Expense>();
-            CreateMap<ResponseRegisterUserJson, User>();
+            CreateMap<ResponseRegisterUserJson, User>()
+                .ForMember(dest => dest.Password, config => config.Ignore());
         }
 
         private void EntityToResponse() 
