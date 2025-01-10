@@ -5,10 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Financia.Application.UseCases.Users
 {
-    public partial class PasswordValidator<T> : PropertyValidator<T , string>
+    public partial class PasswordValidator<T> : PropertyValidator<T, string>
     {
-        public override string Name => "PasswordValidator";
         private const string ERROR_MESSAGE_KEY = "ErrorMessage";
+
+        public override string Name => "PasswordValidator";
 
         protected override string GetDefaultMessageTemplate(string errorCode)
         {
@@ -17,9 +18,9 @@ namespace Financia.Application.UseCases.Users
 
         public override bool IsValid(ValidationContext<T> context, string password)
         {
-            if (string.IsNullOrWhiteSpace(password)) 
+            if (string.IsNullOrWhiteSpace(password))
             {
-                context.MessageFormatter.AppendArgument( ERROR_MESSAGE_KEY , ResourceErrorMessages.PASSWORD_INVALID );
+                context.MessageFormatter.AppendArgument(ERROR_MESSAGE_KEY, ResourceErrorMessages.PASSWORD_INVALID);
                 return false;
             }
 
@@ -58,14 +59,11 @@ namespace Financia.Application.UseCases.Users
 
         [GeneratedRegex(@"[A-Z]+")]
         private static partial Regex UpperCaseLetter();
-
         [GeneratedRegex(@"[a-z]+")]
         private static partial Regex LowerCaseLetter();
-
         [GeneratedRegex(@"[0-9]+")]
         private static partial Regex Numbers();
-
-        [GeneratedRegex(@"[!@#$%^&*(),.?\:{}|<>]+")]
+        [GeneratedRegex(@"[\!\?\*\.]+")]
         private static partial Regex SpecialSymbols();
     }
 }

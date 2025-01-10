@@ -28,6 +28,7 @@ namespace Financia.Infrastructure
             services.AddScoped<IExpensesWriteOnlyRepository, ExpensesRepository>();
             services.AddScoped<IExpensesUpdateOnlyRepository, ExpensesRepository>();
             services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+            services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
         }
 
         private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
