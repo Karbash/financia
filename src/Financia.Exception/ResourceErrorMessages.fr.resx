@@ -147,4 +147,7 @@
   <data name="PASSWORD_INVALID" xml:space="preserve">
     <value>Le mot de passe doit contenir au moins 8 caractères, y compris une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial (comme !, @, #, $).</value>
   </data>
+  <data name="EMAIL_ALREADY_REGISTERED" xml:space="preserve">
+    <value>L'email est déjà enregistré.</value>
+  </data>
 </root>

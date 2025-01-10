@@ -1,6 +1,7 @@
 ﻿
 using Financia.Domain.Repositories;
 using Financia.Domain.Repositories.Expenses;
+using Financia.Domain.Repositories.User;
 using Financia.Domain.Security.Cryptography;
 using Financia.Infrastructure.DataAccess;
 using Financia.Infrastructure.DataAccess.Repositories;
@@ -26,6 +27,7 @@ namespace Financia.Infrastructure
             services.AddScoped<IExpensesReadOnlyRepository, ExpensesRepository>();
             services.AddScoped<IExpensesWriteOnlyRepository, ExpensesRepository>();
             services.AddScoped<IExpensesUpdateOnlyRepository, ExpensesRepository>();
+            services.AddScoped<IUserReadOnlyRepository, UserRepository>();
         }
 
         private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
