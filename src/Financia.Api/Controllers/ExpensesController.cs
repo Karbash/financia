@@ -6,12 +6,14 @@ using Financia.Application.UseCases.Expenses.Update;
 using Financia.Communication.Requests;
 using Financia.Communication.Responses;
 using Financia.Communication.Responses.Error;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Financia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ExpensesController : ControllerBase
     {
         [HttpPost]
