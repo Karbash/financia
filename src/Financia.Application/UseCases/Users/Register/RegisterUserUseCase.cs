@@ -42,7 +42,7 @@ namespace Financia.Application.UseCases.Users.Register
             await Validate(request);
 
             var user = _mapper.Map<Domain.Entities.User>(request);
-            user.Password = _passwordEncrypter.Encrypt(user.Password);
+            user.Password = _passwordEncrypter.Encrypt(request.Password);
             user.UserIdentifier = Guid.NewGuid();
 
             await _userWriteOnlyRepository.Add(user);
