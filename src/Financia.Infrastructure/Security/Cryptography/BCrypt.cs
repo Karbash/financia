@@ -1,8 +1,7 @@
-﻿
-using Financia.Domain.Security.Cryptography;
+﻿using Financia.Domain.Security.Cryptography;
 using BC = BCrypt.Net.BCrypt;
 
-namespace Financia.Infrastructure.Security
+namespace Financia.Infrastructure.Security.Cryptography
 {
     internal class BCrypt : IPasswordEncrypter
     {

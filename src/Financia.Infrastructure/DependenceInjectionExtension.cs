@@ -3,8 +3,10 @@ using Financia.Domain.Repositories;
 using Financia.Domain.Repositories.Expenses;
 using Financia.Domain.Repositories.User;
 using Financia.Domain.Security.Cryptography;
+using Financia.Domain.Security.Tokens;
 using Financia.Infrastructure.DataAccess;
 using Financia.Infrastructure.DataAccess.Repositories;
+using Financia.Infrastructure.Security.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,9 +18,20 @@ namespace Financia.Infrastructure
        public static void AddInfrastructure(this IServiceCollection services,IConfiguration configuration)
         { 
             AddDbContext(services, configuration);
+            AddToken(services, configuration);
             AddRepositories(services);
 
-            services.AddScoped<IPasswordEncrypter, Security.BCrypt>();
+            services.AddScoped<IPasswordEncrypter, Security.Cryptography.BCrypt>();
+           
+        }
+
+        private static void AddToken(this IServiceCollection services, IConfiguration configuration)
+        {
+            var expirationTokenTimeMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpiresMinutes");
+            var signingTokenKey = configuration.GetValue<string>("Settings:Jwt:SigningKey");
+
+            services.AddScoped<IAccessTokenGenerator>( 
+                config => new JwtTokenGenerator(expirationTokenTimeMinutes, signingTokenKey!));
         }
 
         private static void AddRepositories(IServiceCollection services)

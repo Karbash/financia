@@ -4,6 +4,7 @@ using Financia.Communication.Responses;
 using Financia.Domain.Repositories;
 using Financia.Domain.Repositories.User;
 using Financia.Domain.Security.Cryptography;
+using Financia.Domain.Security.Tokens;
 using Financia.Exception;
 using Financia.Exception.ExceptionBase.Exceptions;
 using FluentValidation.Results;
@@ -18,13 +19,15 @@ namespace Financia.Application.UseCases.Users.Register
         private readonly IUserReadOnlyRepository _userReadOnlyRepository;
         private readonly IUserWriteOnlyRepository _userWriteOnlyRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAccessTokenGenerator _accessTokenGenerator;
 
         public RegisterUserUseCase( 
             IMapper mapper, 
             IPasswordEncrypter passwordEncrypter,
             IUserReadOnlyRepository userReadOnlyRepository,
             IUserWriteOnlyRepository userWriteOnlyRepository,
-            IUnitOfWork unitOfWork
+            IUnitOfWork unitOfWork,
+            IAccessTokenGenerator accessTokenGenerator
             )
         {
             _mapper = mapper;
@@ -32,6 +35,7 @@ namespace Financia.Application.UseCases.Users.Register
             _userReadOnlyRepository = userReadOnlyRepository;
             _userWriteOnlyRepository = userWriteOnlyRepository;
             _unitOfWork = unitOfWork;
+            _accessTokenGenerator = accessTokenGenerator;
         }
         public async Task<ResponseRegisterUserJson> Execute(RequestRegisterUserJson request)
         {
@@ -48,7 +52,7 @@ namespace Financia.Application.UseCases.Users.Register
             return new ResponseRegisterUserJson
             {
                 Name = user.Name,
-                Token = "token user"
+                Token = _accessTokenGenerator.Generate(user)
             };
         }
 
