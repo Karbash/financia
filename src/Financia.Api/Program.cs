@@ -1,8 +1,11 @@
 using Financia.Api.Filters;
 using Financia.Api.Middleware;
+using Financia.Api.Token;
 using Financia.Application;
+using Financia.Domain.Security.Tokens;
 using Financia.Infrastructure;
 using Financia.Infrastructure.Migrations;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -53,6 +56,10 @@ namespace Financia.Api
 
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
+
+            builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
+
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddAuthentication( config =>
             {

@@ -21,34 +21,33 @@ namespace Financia.Infrastructure.DataAccess.Repositories
             await _dbContext.Expenses.AddAsync(expense);
         }
 
-        public async Task<bool> Delete(long id)
+        public async Task Delete(long id)
         {
-            var result = await _dbContext.Expenses.FirstOrDefaultAsync(expense => expense.Id == id);
-            if (result is null)
-            {
-                return false;
-            }
-            _dbContext.Expenses.Remove(result);
-            return true;
+            var result = await _dbContext.Expenses.FindAsync(id);
+            _dbContext.Expenses.Remove(result!);
+ 
         }
 
-        public async Task<List<Expense>> GetAll(int page, int pageSize)
+        public async Task<List<Expense>> GetAll(int page, int pageSize, User user)
         {
             return await _dbContext.Expenses
                         .AsNoTracking()
                         .Skip((page - 1) * pageSize)
                         .Take(pageSize)
+                        .Where(expense => expense.UserId == user.Id)
                         .ToListAsync();
         }
 
-        async Task<Expense?> IExpensesReadOnlyRepository.GetById(long id)
+        async Task<Expense?> IExpensesReadOnlyRepository.GetById(User user, long id)
         {
-            return await _dbContext.Expenses.AsNoTracking().FirstOrDefaultAsync(expense => expense.Id == id);
+            return await _dbContext.Expenses.AsNoTracking()
+                .FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
         }
 
-        async Task<Expense?> IExpensesUpdateOnlyRepository.GetById(long id)
+        async Task<Expense?> IExpensesUpdateOnlyRepository.GetById(User user , long id)
         {
-            return await _dbContext.Expenses.FirstOrDefaultAsync(expense => expense.Id == id);
+            return await _dbContext.Expenses
+                .FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
         }
 
         public void Update(Expense expense)
@@ -56,7 +55,7 @@ namespace Financia.Infrastructure.DataAccess.Repositories
             _dbContext.Expenses.Update(expense);
         }
 
-        public async Task<List<Expense>> FilterByMonth(DateOnly date)
+        public async Task<List<Expense>> FilterByMonth(User user, DateOnly date)
         {
             var startDate = new DateTime(year: date.Year, month: date.Month, day: 1).Date;
             int daysInMonth = DateTime.DaysInMonth(year: date.Year, month: date.Month);
@@ -65,7 +64,7 @@ namespace Financia.Infrastructure.DataAccess.Repositories
             return await _dbContext
                .Expenses
                .AsNoTracking()
-               .Where(expense => expense.Date >= startDate && expense.Date <= endDate)
+               .Where(expense => expense.Date >= startDate && expense.Date <= endDate && expense.UserId == user.Id)
                .OrderBy(expense => expense.Date)
                .ThenBy(expense => expense.Title)
                .ToListAsync(); 

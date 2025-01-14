@@ -6,6 +6,7 @@ using Financia.Exception.ExceptionBase.Exceptions;
 using AutoMapper;
 using Financia.Exception;
 using Financia.Domain.Entities;
+using Financia.Domain.Services.LoggedUser;
 
 namespace Financia.Application.UseCases.Expenses.Update
 {
@@ -14,21 +15,27 @@ namespace Financia.Application.UseCases.Expenses.Update
         private readonly IExpensesUpdateOnlyRepository _expenseRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILoggedUser _loggedUser;
 
         public UpdateExpenseUseCase(
             IExpensesUpdateOnlyRepository expenseRepository,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            ILoggedUser loggedUser
+            )
         {
             _expenseRepository = expenseRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _loggedUser = loggedUser;
         }
 
         public async Task Execute(long id, RequestExpenseJson request)
         {
             Validate(request);
-            var expense = await _expenseRepository.GetById(id);
+
+            var loggedUser = await _loggedUser.Get();
+            var expense = await _expenseRepository.GetById(loggedUser, id );
 
             if (expense is null)
             {

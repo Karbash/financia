@@ -3,6 +3,7 @@ using ClosedXML.Excel;
 using Financia.Domain.Extensions;
 using Financia.Domain.Reports;
 using Financia.Domain.Repositories.Expenses;
+using Financia.Domain.Services.LoggedUser;
 
 namespace Financia.Application.UseCases.Expenses.Reports.Excel
 {
@@ -10,15 +11,19 @@ namespace Financia.Application.UseCases.Expenses.Reports.Excel
     {
         private const string CURRENCY_SYMBOL = "$";
         private readonly IExpensesReadOnlyRepository _repository;
+        private readonly ILoggedUser _loggedUser;
 
-        public GenerateExpensesReportExcelUseCase(IExpensesReadOnlyRepository expensesReadOnlyRepository)
+        public GenerateExpensesReportExcelUseCase(IExpensesReadOnlyRepository expensesReadOnlyRepository
+            , ILoggedUser loggedUser)
         {
             _repository = expensesReadOnlyRepository;
+            _loggedUser = loggedUser;
         }
 
         public async Task<byte[]> Execute(DateOnly month)
         {
-            var expenses = await _repository.FilterByMonth(month);
+            var loggedUser = await _loggedUser.Get();
+            var expenses = await _repository.FilterByMonth(loggedUser,month);
 
             if (expenses.Count == 0)
             {
@@ -27,7 +32,7 @@ namespace Financia.Application.UseCases.Expenses.Reports.Excel
 
             using var workbook = new XLWorkbook
             {
-                Author = "Financia Software"
+                Author = loggedUser.Name
             };
 
             workbook.Style.Font.FontSize = 12;

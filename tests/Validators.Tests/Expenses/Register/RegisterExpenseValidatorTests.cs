@@ -1,8 +1,8 @@
 ﻿using CommomTestUtilities.Requests;
+using FluentAssertions;
+using Financia.Exception;
 using Financia.Application.UseCases.Expenses;
 using Financia.Communication.Requests;
-using Financia.Exception;
-using FluentAssertions;
 
 namespace Validators.Tests;
 

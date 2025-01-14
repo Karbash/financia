@@ -2,6 +2,7 @@
 using Financia.Communication.Responses;
 using Financia.Domain.Entities;
 using Financia.Domain.Repositories.Expenses;
+using Financia.Domain.Services.LoggedUser;
 using Financia.Exception;
 using Financia.Exception.ExceptionBase.Exceptions;
 
@@ -11,16 +12,19 @@ namespace Financia.Application.UseCases.Expenses.ById
     {
         private readonly IExpensesReadOnlyRepository _expensesRepository;
         private readonly IMapper _mapper;
+        private readonly ILoggedUser _loggedUser;
 
-        public GetExpenseByIdUseCase(IExpensesReadOnlyRepository expensesRepository, IMapper mapper)
+        public GetExpenseByIdUseCase(IExpensesReadOnlyRepository expensesRepository,ILoggedUser loggedUser, IMapper mapper)
         {
             _expensesRepository = expensesRepository;
             _mapper = mapper;
+            _loggedUser = loggedUser;
         }
 
         public async Task<ResponseExpenseJson> Execute(long id)
         {
-            Expense? result = await _expensesRepository.GetById(id);
+            var loggedUser = await _loggedUser.Get();
+            Expense? result = await _expensesRepository.GetById(loggedUser, id);
 
             if (result is null)
             {

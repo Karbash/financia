@@ -4,9 +4,11 @@ using Financia.Domain.Repositories.Expenses;
 using Financia.Domain.Repositories.User;
 using Financia.Domain.Security.Cryptography;
 using Financia.Domain.Security.Tokens;
+using Financia.Domain.Services.LoggedUser;
 using Financia.Infrastructure.DataAccess;
 using Financia.Infrastructure.DataAccess.Repositories;
 using Financia.Infrastructure.Security.Tokens;
+using Financia.Infrastructure.Services.LoggedUser;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +24,9 @@ namespace Financia.Infrastructure
             AddRepositories(services);
 
             services.AddScoped<IPasswordEncrypter, Security.Cryptography.BCrypt>();
-           
+            services.AddScoped<ILoggedUser, LoggedUser>();
+            
+
         }
 
         private static void AddToken(this IServiceCollection services, IConfiguration configuration)

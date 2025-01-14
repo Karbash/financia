@@ -14,6 +14,7 @@ using Table = MigraDoc.DocumentObjectModel.Tables.Table;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Color = MigraDoc.DocumentObjectModel.Color;
 using Financia.Domain.Extensions;
+using Financia.Domain.Services.LoggedUser;
 
 namespace Financia.Application.UseCases.Expenses.Reports.Pdf
 {
@@ -22,27 +23,31 @@ namespace Financia.Application.UseCases.Expenses.Reports.Pdf
         private const string CURRENCY_SYMBOL = "$";
         private const int HEIGHT_LINE_EXPENSE_TABLE = 20;
         private readonly IExpensesReadOnlyRepository _repository;
+        private readonly ILoggedUser _loggedUser;
 
-        public GenerateExpensesReportPdfUseCase(IExpensesReadOnlyRepository expensesReadOnlyRepository)
+        public GenerateExpensesReportPdfUseCase(IExpensesReadOnlyRepository expensesReadOnlyRepository,
+            ILoggedUser loggedUser)
         {
             _repository = expensesReadOnlyRepository;
-
+            _loggedUser = loggedUser;
             GlobalFontSettings.FontResolver = new ExpenseReportFontResolver();
         }
 
         public async Task<byte[]> Execute(DateOnly month)
         {
-            var expenses = await _repository.FilterByMonth(month);
+            var loggedUser = await _loggedUser.Get();
+
+            var expenses = await _repository.FilterByMonth(loggedUser, month);
 
             if (expenses.Count == 0)
             {
                 return [];
             }
 
-            var document= CreateDocument(month);
+            var document= CreateDocument(loggedUser.Name, month);
             var page  = CreatePage(document);
 
-            CreateHeaderWhithProfilePhoto(page);
+            CreateHeaderWhithProfilePhoto(loggedUser.Name, page);
             decimal sumExpenses = expenses.Sum(expenses => expenses.Amount);
             CreateTotalSpentSection(page, sumExpenses, month);
 
@@ -69,7 +74,7 @@ namespace Financia.Application.UseCases.Expenses.Reports.Pdf
                 row.Cells[2].AddParagraph(expense.Payment.PaymentTypeToString());
                 SetStyleBaseForExpenseInformations(row.Cells[2], ColorsHelper.GREEN_DARK);
 
-                row.Cells[3].AddParagraph($"-{expense.Amount} {CURRENCY_SYMBOL}");
+                row.Cells[3].AddParagraph($"-{expense.Amount:f2} {CURRENCY_SYMBOL}");
                 SetStyleBaseForExpenseInformations(row.Cells[3], ColorsHelper.WHITE, 14);
 
                 if(string.IsNullOrWhiteSpace(expense.Description) == false)
@@ -91,11 +96,11 @@ namespace Financia.Application.UseCases.Expenses.Reports.Pdf
             return RenderDocument(document);
         }
 
-        private Document CreateDocument(DateOnly month) 
+        private Document CreateDocument(string author, DateOnly month) 
         { 
             var document = new Document();
             document.Info.Title = $"{ResourceReportGenerationMessages.EXPENSES_FOR} {month:Y}";
-            document.Info.Author = "Financia Software";
+            document.Info.Author = author;
 
             var style = document.Styles["Normal"];
             style!.Font.Name = FontHelper.ROBOTO_REGULAR;
@@ -119,7 +124,7 @@ namespace Financia.Application.UseCases.Expenses.Reports.Pdf
             return section;
         }
 
-        private void CreateHeaderWhithProfilePhoto(Section page)
+        private void CreateHeaderWhithProfilePhoto(string username, Section page)
         {
             var table = page.AddTable();
             table.AddColumn();
@@ -131,7 +136,7 @@ namespace Financia.Application.UseCases.Expenses.Reports.Pdf
             var pathFile = Path.Combine(directoryName!, "Logo", "financia-logo.png");
 
             row.Cells[0].AddImage(pathFile);
-            row.Cells[1].AddParagraph("Hey, Jay Silver");
+            row.Cells[1].AddParagraph($"Hey, {username}");
 
             row.Cells[1].Format.Font = new Font { Name = FontHelper.ROBOTO_THIN, Size = 12 };
             row.Cells[1].VerticalAlignment = MigraDoc.DocumentObjectModel.Tables.VerticalAlignment.Top;
@@ -157,7 +162,7 @@ namespace Financia.Application.UseCases.Expenses.Reports.Pdf
 
            
 
-            paragraph.AddFormattedText($"{sumExpenses} {CURRENCY_SYMBOL}", 
+            paragraph.AddFormattedText($"{sumExpenses:f2} {CURRENCY_SYMBOL}", 
                 new Font
             {
                     Name = FontHelper.ROBOTO_BLACK,
