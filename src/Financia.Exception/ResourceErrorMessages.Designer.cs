@@ -133,6 +133,15 @@ namespace Financia.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Password different from current password..
+        /// </summary>
+        public static string PASSWORD_DIFFERENT_CURRENT_PASSWORD {
+            get {
+                return ResourceManager.GetString("PASSWORD_DIFFERENT_CURRENT_PASSWORD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character (such as !, @, #, $)..
         /// </summary>
         public static string PASSWORD_INVALID {

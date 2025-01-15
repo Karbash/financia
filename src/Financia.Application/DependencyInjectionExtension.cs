@@ -7,8 +7,11 @@ using Financia.Application.UseCases.Expenses.Reports.Excel;
 using Financia.Application.UseCases.Expenses.Reports.Pdf;
 using Financia.Application.UseCases.Expenses.Update;
 using Financia.Application.UseCases.Login.DoLogin;
+using Financia.Application.UseCases.Users.Delete;
+using Financia.Application.UseCases.Users.GetProfile;
+using Financia.Application.UseCases.Users.PasswordChange;
 using Financia.Application.UseCases.Users.Register;
-using Financia.Domain.Security.Tokens;
+using Financia.Application.UseCases.Users.UpdateProfile;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Financia.Application
@@ -37,7 +40,10 @@ namespace Financia.Application
             services.AddScoped<IGenerateExpensesReportPdfUseCase, GenerateExpensesReportPdfUseCase>();
             services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
             services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
-
+            services.AddScoped<IGetProfileUseCase, GetProfileUseCase>();
+            services.AddScoped<IUpdateUserUseCase, UpdateUserUseCase>();
+            services.AddScoped<IChangePasswordUseCase, ChangePasswordUseCase>();
+            services.AddScoped<IDeleteUserAccountUseCase, DeleteUserAccountUseCase>();
         }
     }
 }

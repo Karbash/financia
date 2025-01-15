@@ -26,6 +26,7 @@ namespace Financia.Application.AutoMapper
             CreateMap<Expense, ResponseShortExpenseJson>();
             CreateMap<Expense, ResponseExpenseJson>();
             CreateMap<User, ResponseRegisterUserJson>();
+            CreateMap<User, ResponseUserProfileJson>();
         }
     }
 }
