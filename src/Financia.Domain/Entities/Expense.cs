@@ -10,6 +10,7 @@ namespace Financia.Domain.Entities
         public DateTime Date { get; set; }
         public decimal Amount { get; set; }
         public PaymentType Payment { get; set; }
+        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
         public long UserId { get; set; }
         public User User { get; set; } = default!;
     }

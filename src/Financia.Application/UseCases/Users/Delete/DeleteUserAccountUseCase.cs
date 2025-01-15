@@ -4,7 +4,7 @@ using Financia.Domain.Services.LoggedUser;
 
 namespace Financia.Application.UseCases.Users.Delete
 {
-    public class DeleteUserAccountUseCase: IDeleteUserAccountUseCase
+    public class DeleteUserAccountUseCase : IDeleteUserAccountUseCase
     {
         private readonly IUserWriteOnlyRepository _repository;
         private readonly ILoggedUser _loggedUser;
@@ -23,4 +23,5 @@ namespace Financia.Application.UseCases.Users.Delete
             await _repository.Delete(user);
             await _unitOfWork.Commit();
         }
+    }
 }
