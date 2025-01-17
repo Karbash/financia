@@ -20,6 +20,12 @@ namespace Financia.Application.UseCases.Expenses
             RuleFor(expense => expense.Payment)
                 .IsInEnum()
                 .WithMessage(ResourceErrorMessages.PAYMENT_TYPE_INVALID);
+            RuleFor(expense => expense.Tags)
+                .ForEach(rule =>
+                {
+                    rule.IsInEnum()
+                        .WithMessage(ResourceErrorMessages.TAG_TYPE_NOT_SUPPORTED);
+                });
         }
     }
 }

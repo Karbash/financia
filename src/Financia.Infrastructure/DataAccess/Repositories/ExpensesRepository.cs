@@ -2,6 +2,7 @@
 using Financia.Domain.Entities;
 using Financia.Domain.Repositories.Expenses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Financia.Infrastructure.DataAccess.Repositories
 {
@@ -40,13 +41,14 @@ namespace Financia.Infrastructure.DataAccess.Repositories
 
         async Task<Expense?> IExpensesReadOnlyRepository.GetById(User user, long id)
         {
-            return await _dbContext.Expenses.AsNoTracking()
+            return await GetFullExpense()
+                .AsNoTracking()
                 .FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
         }
 
         async Task<Expense?> IExpensesUpdateOnlyRepository.GetById(User user , long id)
         {
-            return await _dbContext.Expenses
+            return await GetFullExpense()
                 .FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
         }
 
@@ -68,6 +70,12 @@ namespace Financia.Infrastructure.DataAccess.Repositories
                .OrderBy(expense => expense.Date)
                .ThenBy(expense => expense.Title)
                .ToListAsync(); 
+        }
+
+        private IIncludableQueryable<Expense, ICollection<Tag>> GetFullExpense()
+        {
+            return _dbContext.Expenses
+                .Include(expense => expense.Tags);
         }
     }
 }

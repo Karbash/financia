@@ -10,5 +10,6 @@ namespace Financia.Communication.Requests
         public DateTime Date { get; set; }
         public decimal Amount {  get; set; }
         public PaymentType Payment {  get; set; }
+        public IList<Tag> Tags { get; set; } = [];
     }
 }
